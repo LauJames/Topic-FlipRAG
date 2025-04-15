@@ -30,7 +30,7 @@ pip install -r requirements.txt
 - FAISS 1.7.2+
 - (Complete with your actual dependencies)
 
-## dataset
+## Datasets
 ### MsMarco
 **overview:**
 The MAchine Reading COmprehension ([MSMARCO](https://microsoft.github.io/msmarco/)) dataset  is based on sampled real users' Bing queries. The corpus is initially constructed by retrieving the top-10 passages from the Bing search engine and then annotated. Relevance labels are sparsely-judged and derived from what passages are marked as having the answer to the query. The full training set contains approximately 400M tuples of a query, relevant and non-relevant passages. The development set (MSMARCO DEV) of passage reranking contains 6,980 queries, each paired with the top 1,000 passages retrieved with BM25 from the MSMARCO corpus.
