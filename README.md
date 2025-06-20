@@ -42,7 +42,7 @@ This project is **Colab-friendly**. You only need to replace paths in the Jupyte
 3. **Stage 2 – Adversarial Trigger Generation**  
    [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LauJames/Topic-FlipRAG/blob/main/Stage2_adversarial_trigger_generation.ipynb)  
    ➤ Optimizes adversarial triggers based on Stage 1 outputs.  
-   ⮕ To skip Stage 1, directly set: (This is a pre-generated example for fast evaluation.)  
+   ⮕ To skip entire Stage 1 procession, directly set: (This is a pre-generated example for fast evaluation.)  
    ```python
    path_know = 'data/example_adversarial_docs/know_attack_data_3_0.json'
    ```
