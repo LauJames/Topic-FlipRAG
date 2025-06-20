@@ -25,8 +25,8 @@ This repository contains the full implementation of **Topic-FlipRAG**, a novel b
 
 4. **Data**  
    - `PROCON_data.json`: The opinion dataset used in the paper.  
-   - Example poisoned documents: `data/Topic-FlipRAG_society_CON_passges/` — used in `RAG_pipeline.ipynb`.  
-   - Example `doc_know` file: `data/know_attack_data_3_0.json` — used in `Stage2_adversarial_trigger_generation.ipynb` to demonstrate the trigger generation process.
+   - Example poisoned documents: `data/example_adversarial_docs/Topic-FlipRAG_society_CON_passges/` — used in `RAG_pipeline.ipynb`.  
+   - Example `doc_know` file: `data/example_adversarial_docs/know_attack_data_3_0.json` — used in `Stage2_adversarial_trigger_generation.ipynb` to demonstrate the trigger generation process.
 
 
 ## 🚀 Quick Start
@@ -36,20 +36,28 @@ This project is **Colab-friendly**. You only need to replace paths in the Jupyte
 ### 🔧 Colab Notebooks
 
 1. **Stage 1 – Knowledge-guided Attack**  
-   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongyuyang-alt/Topic-FlipRAG-1/blob/main/Stage1_knowledge_guided_attack.ipynb)  
-   ⮕ Replace `path_know = 'doc_path_from_stage_1_know_attack.json'` with  `data/know_attack_data_3_0.json`  
+   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LauJames/Topic-FlipRAG/blob/main/Stage1_knowledge_guided_attack.ipynb)
    💡 *Recommended GPU: T4*
 
-2. **Stage 2 – Adversarial Trigger Generation**  
-   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongyuyang-alt/Topic-FlipRAG-1/blob/main/Stage2_adversarial_trigger_generation.ipynb)  
-   ⮕ Format and optimize triggers based on Stage 1 outputs.  
-   💡 *Recommended GPU: T4 *
+3. **Stage 2 – Adversarial Trigger Generation**  
+   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LauJames/Topic-FlipRAG/blob/main/Stage2_adversarial_trigger_generation.ipynb)  
+   ➤ Optimizes adversarial triggers based on Stage 1 outputs.  
+   ⮕ To skip Stage 1, directly set: (This is a pre-generated example for fast evaluation.)  
+   ```python
+   path_know = 'data/example_adversarial_docs/know_attack_data_3_0.json'
+   ```
+   💡 *Recommended GPU: T4*
 
-3. **RAG Pipeline – Execution & Evaluation**  
-   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongyuyang-alt/Topic-FlipRAG-1/blob/main/RAG_pipeline.ipynb)  
-   ⮕ Replace `result_path` in `load_data()` with a file path from  `data/Topic-FlipRAG_society_CON_passges/`  
+4. **RAG Pipeline – Execution & Evaluation**  
+   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LauJames/Topic-FlipRAG/blob/main/RAG_pipeline.ipynb)  
+   ➤ Runs the full RAG system and evaluates poisoned document impact.  
+   ⮕ To skip Stage 2, replace `result_path` in `load_data()` with a sample file from:  
+   ```
+   data/example_adversarial_docs/Topic-FlipRAG_society_CON_passges/
+   ```
+   (These are pre-generated adversarial examples in the *society* domain targeting the CON stance.)  
    💡 *Recommended GPU: A100*  
-   🔁 *We recommend using Google Drive to host large poisoned document files.*
+   🔁 *Use Google Drive for hosting large poisoned files if needed.*
 
 
 ## 💡 Note
@@ -68,4 +76,3 @@ If you find this work useful, please cite:
   journal={arXiv preprint arXiv:2502.01386},
   year={2025}
 }
-
