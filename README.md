@@ -1,109 +1,71 @@
-# Topic-FlipRAG:Topic-FlipRAG: Topic-Orientated Adversarial Opinion Manipulation Attacks to Retrieval-Augmented Generation Models
-
+# 🎯 Topic-FlipRAG: Topic-Oriented Adversarial Opinion Manipulation Attacks on RAG Models
 
 ![Python Version](https://img.shields.io/badge/python-3.9%2B-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Overview
-
-This repository contains the implementation of Topic-FlipedRAG, a novel two-stage adversarial attack framework targeting Retrieval-Augmented Generation (RAG) systems. The proposed method demonstrates how strategic knowledge poisoning can systematically manipulate LLM outputs for opinion-oriented tasks through semantic-level perturbations.
-
-## Key Features
-- 🎯 **Topic-oriented attacks** on multi-perspective content generation
-- ⚡ **Dual-phase manipulation** combining:
-  - Traditional adversarial ranking techniques
-  - LLM-driven semantic perturbation generation
-- 📊 Comprehensive evaluation framework for opinion shift measurement
-
-## Installation
-
-```bash
-git clone https://github.com/your_anonymous_repo/Topic-FlipedRAG.git
-cd Topic-FlipedRAG
-pip install -r requirements.txt
-```
-
-**Requirements**:
-- Python 3.9+
-- PyTorch 2.0+
-- Transformers 4.30+
-- FAISS 1.7.2+
-- (Complete with your actual dependencies)
-
-## Datasets
-### MsMarco
-**Overview:**
-The MAchine Reading COmprehension ([MSMARCO](https://microsoft.github.io/msmarco/)) dataset  is based on sampled real users' Bing queries. The corpus is initially constructed by retrieving the top-10 passages from the Bing search engine and then annotated. Relevance labels are sparsely-judged and derived from what passages are marked as having the answer to the query. The full training set contains approximately 400M tuples of a query, relevant and non-relevant passages. The development set (MSMARCO DEV) of passage reranking contains 6,980 queries, each paired with the top 1,000 passages retrieved with BM25 from the MSMARCO corpus.
-
-**Topic-queries generation procession:**
-To construct topic-lists for evaluation, we applied a Kmeans clustering algorithm to group similar queries, forming topics that each contained a series of related queries. To further evaluate the performance of our method under extreme topic-query scenarios, we applied an intra-topic similarity filtering process. Only topics with queries exhibiting high semantic diversity and containing a sufficient number of queries were retained.
-This process resulted in 29 topics, with each topic containing an average of 22.28 queries. The average similarity score within each topic was approximately 0.5, indicating sufficient diversity among queries to ensure a rigorous evaluation
-
-### PROCON 
-**Overview:**
-To conduct our experiments, we utilized controversial topic data scraped from the PROCON.ORG website ([PROCON](https://www.britannica.com/procon)).The controversial topic dataset includes over 80 topics,covering fields such as society, health, government, and education.Each controversial topic is discussed from two stances (Pro and Con), with an average of 30 related passages, each holding a certain opinion with stance Pro or Con.
-
-**Topic-queries generation procession:**
-To simulate real-world user interactions with a RAG system, we instructed a large language model (GPT-4o) to act as a user and generate 40 potential sub-queries for each topic.These sub-queries were designed to reflect the diverse questions and concerns users might raise when exploring a specific controversial topic.After generating the sub-queries, we applied a similarity filtering process to ensure diversity by retaining only those with a similarity score below approximately 0.85. The filtering step effectively removed redundant queries while preserving
-a wide range of perspectives. As a result, the final set of topicqueries achieved an average similarity score of approximately 0.7, ensuring that the queries were sufficiently diverse yet semantically relevant. 
+**Core implementation of Paper:**  
+[**Topic-FlipRAG: Topic-Orientated Adversarial Opinion Manipulation Attacks to Retrieval-Augmented Generation Models**](https://arxiv.org/abs/2502.01386)
 
 
 
-## Usage
+## 🧠 Overview
 
-### Basic Attack Pipeline
-```python
-from attack_pipeline import TopicFlipedRAG
+This repository contains the full implementation of **Topic-FlipRAG**, a novel black-box adversarial attack framework against Retrieval-Augmented Generation (RAG) systems. By leveraging general language knowledge and reverse-gradient signals, it optimizes a small number of poisoned documents to effectively flip the opinion stance of the RAG system across an entire set of topic-related queries.
 
-# Initialize attack module
-attack_config = {
-    "target_topic": "climate_change",
-    "opinion_direction": "skepticism",
-    "perturbation_level": 0.3
+### 📂 Repository Structure
+
+1. **Stage1_knowledge_guided_attack.ipynb**  
+   Includes the core implementation of the knowledge-guided attack, which leverages LLM-inferred general knowledge to perform multi-granularity document modifications (`doc_know` generation).
+
+2. **Stage2_adversarial_trigger_generation.ipynb**  
+   Optimizes minimal triggers to attach to `doc_know` for final poisoned documents. Includes formatting scripts for downstream poisoning tasks.
+
+3. **RAG_pipeline.ipynb**  
+   Builds a full RAG system (retriever + database + LLM) and evaluates poisoning effects. Pre-generated poisoned docs and opinion evaluation scripts are provided.
+
+4. **Data**  
+   - `PROCON_data.json`: The opinion dataset used in the paper.  
+   - Example poisoned documents: `data/Topic-FlipRAG_society_CON_passges/` — used in `RAG_pipeline.ipynb`.  
+   - Example `doc_know` file: `data/know_attack_data_3_0.json` — used in `Stage2_adversarial_trigger_generation.ipynb` to demonstrate the trigger generation process.
+
+
+## 🚀 Quick Start
+
+This project is **Colab-friendly**. You only need to replace paths in the Jupyter notebooks to point to the corresponding files in the `data/` directory. **OpenAI API** is required for Stage1_knowledge_guided_attack.ipynb and the RAG_pipeline.ipynb.
+
+### 🔧 Colab Notebooks
+
+1. **Stage 1 – Knowledge-guided Attack**  
+   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongyuyang-alt/Topic-FlipRAG-1/blob/main/Stage1_knowledge_guided_attack.ipynb)  
+   ⮕ Replace `path_know = 'doc_path_from_stage_1_know_attack.json'` with  `data/know_attack_data_3_0.json`  
+   💡 *Recommended GPU: T4*
+
+2. **Stage 2 – Adversarial Trigger Generation**  
+   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongyuyang-alt/Topic-FlipRAG-1/blob/main/Stage2_adversarial_trigger_generation.ipynb)  
+   ⮕ Format and optimize triggers based on Stage 1 outputs.  
+   💡 *Recommended GPU: T4 *
+
+3. **RAG Pipeline – Execution & Evaluation**  
+   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/gongyuyang-alt/Topic-FlipRAG-1/blob/main/RAG_pipeline.ipynb)  
+   ⮕ Replace `result_path` in `load_data()` with a file path from  `data/Topic-FlipRAG_society_CON_passges/`  
+   💡 *Recommended GPU: A100*  
+   🔁 *We recommend using Google Drive to host large poisoned document files.*
+
+
+## 💡 Note
+To facilitate quick testing, we provide a subset of poisoned documents located in `data/Topic-FlipRAG_society_CON_passges/`, specifically targeting the `"Society & Culture"` domain with a CON (oppose) stance.  For full-scale evaluation, you can modify the code to load the entire dataset from `PROCON_data.json`.
+
+
+
+## 📎 Citation
+
+If you find this work useful, please cite:
+
+```bibtex
+@article{gong2025topic,
+  title={Topic-FlipRAG: Topic-Orientated Adversarial Opinion Manipulation Attacks to Retrieval-Augmented Generation Models},
+  author={Gong, Yuyang and Chen, Zhuo and Chen, Miaokun and Yu, Fengchang and Lu, Wei and Wang, Xiaofeng and Liu, Xiaozhong and Liu, Jiawei},
+  journal={arXiv preprint arXiv:2502.01386},
+  year={2025}
 }
-attacker = TopicFlipedRAG(**attack_config)
 
-# Execute attack on RAG system
-compromised_responses = attacker.execute_attack(
-    base_retriever=your_retriever,
-    generator_model=your_llm,
-    query_batch=test_queries
-)
-```
-
-### Evaluation Metrics
-```python
-from evaluation import OpinionShiftAnalyzer
-
-analyzer = OpinionShiftAnalyzer(reference_corpus="neutral_responses.json")
-shift_scores = analyzer.calculate_opinion_shift(
-    original_responses=baseline_outputs,
-    attacked_responses=compromised_responses
-)
-```
-
-## Experimental Results
-
-Our comprehensive evaluation demonstrates:
-- **+82%** success rate in opinion manipulation across 5 benchmark topics
-- **<15%** detection rate by current defense methods
-- **3.2x** amplification effect in multi-query scenarios
-
-(Replace with your actual experimental metrics)
-
-## Contributing
-
-This project welcomes contributions through:
-- New attack detection methods
-- Defense mechanism proposals
-- Additional evaluation benchmarks
-
-Please submit issues/pull requests following our contribution guidelines.
-
-## License
-
-MIT License (see [LICENSE](LICENSE) for details)
-
----
-
-**Disclaimer**: This implementation is provided for research purposes only. Users must adhere to ethical AI guidelines and applicable laws when using this code.
